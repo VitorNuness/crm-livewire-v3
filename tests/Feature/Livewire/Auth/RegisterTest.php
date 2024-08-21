@@ -34,6 +34,10 @@ it('should be able to register a new user', function () {
 });
 
 test('validation rules', function ($object) {
+    if ($object->rule == 'unique') {
+        User::factory()->create([$object->field => $object->value]);
+    }
+
     Livewire::test(Register::class)
         ->set($object->field, $object->value)
         ->call('submit')
@@ -45,6 +49,7 @@ test('validation rules', function ($object) {
     'email::email'        => (object)['field' => 'email', 'value' => 'email', 'rule' => 'email'],
     'email::max'          => (object)['field' => 'email', 'value' => str_repeat('a' . '@email.com', 256), 'rule' => 'max'],
     'email::confirmed'    => (object)['field' => 'email', 'value' => 'email', 'rule' => 'confirmed'],
+    'email::unique'       => (object)['field' => 'email', 'value' => 'joe@email.com', 'rule' => 'confirmed'],
     'password::required ' => (object)['field' => 'password', 'value' => '', 'rule' => 'required'],
     'password::max'       => (object)['field' => 'password', 'value' => str_repeat('a', 256), 'rule' => 'max'],
 ]);
