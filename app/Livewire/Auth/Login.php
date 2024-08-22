@@ -22,6 +22,6 @@ class Login extends Component
         Auth::attempt([
             'email'    => $this->email,
             'password' => $this->password,
-        ]) ? to_route('home') : '';
+        ]) ? to_route('home') : $this->addError('invalidCredentials', trans('auth.failed'));
     }
 }
