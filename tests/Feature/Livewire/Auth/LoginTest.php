@@ -34,3 +34,19 @@ it('should make sure to inform the an error when email and password doesnt work'
         ->assertHasErrors(['invalidCredentials'])
         ->assertSee(trans('auth.failed'));
 });
+
+it('should make sure that the rate limiting is blocking after 5 attempts', function () {
+    for ($i = 5; $i > 0; $i--) {
+        Livewire::test(Login::class)
+            ->set('email', 'joe@email.com')
+            ->set('password', '123456')
+            ->call('tryToLogin')
+            ->assertHasErrors(['invalidCredentials']);
+    }
+
+    Livewire::test(Login::class)
+        ->set('email', 'joe@email.com')
+        ->set('password', '123456')
+        ->call('tryToLogin')
+        ->assertHasErrors(['rateLimiter']);
+});
