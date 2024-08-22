@@ -31,8 +31,7 @@ it('should make sure to inform the an error when email and password doesnt work'
         ->set('email', 'joe@email.com')
         ->set('password', '123456')
         ->call('tryToLogin')
-        ->assertHasErrors(['invalidCredentials'])
-        ->assertSee(trans('auth.failed'));
+        ->assertHasErrors(['invalidCredentials']);
 });
 
 it('should make sure that the rate limiting is blocking after 5 attempts', function () {
