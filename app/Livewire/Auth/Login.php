@@ -6,16 +6,20 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\{Auth, RateLimiter};
 use Illuminate\Support\Str;
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 class Login extends Component
 {
-    public ?string $email;
+    use Toast;
 
-    public ?string $password;
+    public ?string $email = null;
+
+    public ?string $password = null;
 
     public function render(): View
     {
-        return view('livewire.auth.login');
+        return view('livewire.auth.login')
+            ->layout('components.layouts.guest');
     }
 
     public function tryToLogin(): void
@@ -29,7 +33,11 @@ class Login extends Component
             'password' => $this->password,
         ])) {
             RateLimiter::hit($this->throttleKey());
-            $this->addError('invalidCredentials', trans('auth.failed'));
+            $this->addError(
+                'invalidCredentials',
+                trans('auth.failed')
+            );
+            $this->error(trans('auth.failed'));
 
             return;
         }
@@ -46,9 +54,12 @@ class Login extends Component
     {
         if (RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
 
-            $this->addError('rateLimiter', trans('auth.throttle', [
+            $message = trans('auth.throttle', [
                 'seconds' => RateLimiter::availableIn($this->throttleKey()),
-            ]));
+            ]);
+
+            $this->addError('rateLimiter', $message);
+            $this->warning($message);
 
             return true;
         }
