@@ -1,3 +1,4 @@
 <div>
-    {{-- Do your work, then step back. --}}
+    <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" wire:click="logout" />
 </div>
+
