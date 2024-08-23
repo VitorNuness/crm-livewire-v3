@@ -1,5 +1,7 @@
 <x-card title="Login" shadow class="mx-auto w-[450px]">
-    <x-toast />
+    @if ($message = session()->get('status'))
+        <x-alert :title="$message" icon="o-x-circle" class="alert-error my-4" />
+    @endif
 
     <x-form wire:submit="tryToLogin">
         <x-input label="Email" wire:model="email" />
