@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\PasswordRecovery;
+use App\Livewire\Auth\Password\Recovery;
 use App\Models\User;
 use App\Notifications\PasswordRecoveryNotification;
 use Illuminate\Support\Facades\Notification;
@@ -9,25 +9,25 @@ use Livewire\Livewire;
 use function Pest\Laravel\get;
 
 test('needs to have a route to password recovery', function () {
-    get(route('password.recovery'))
-        ->assertOk();
+    get(route('auth.password.recovery'))
+        ->assertSeeLivewire(Recovery::class);
 });
 
 it('should be able to request for a password recovery sending notification to the user', function () {
     Notification::fake();
     $user = User::factory()->create();
 
-    Livewire::test(PasswordRecovery::class)
-        ->assertDontSee('You will receive an email with the password recovery link.')
+    Livewire::test(Recovery::class)
+        ->assertSeeHtml('alert-success')
         ->set('email', $user->email)
         ->call('startPasswordRecovery')
-        ->assertSee('You will receive an email with the password recovery link.');
+        ->assertSeeHtml('alert-success');
 
     Notification::assertSentTo($user, PasswordRecoveryNotification::class);
 });
 
 test('email validations', function ($value, $rule) {
-    Livewire::test(PasswordRecovery::class)
+    Livewire::test(Recovery::class)
         ->set('email', $value)
         ->call('startPasswordRecovery')
         ->assertHasErrors(['email' => $rule]);
