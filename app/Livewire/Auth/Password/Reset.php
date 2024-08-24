@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\{Password};
 use Illuminate\Support\Str;
 use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 class Reset extends Component
 {
+    use Toast;
+
     #[Rule(['required'])]
     public ?string $token = null;
 
@@ -55,8 +58,9 @@ class Reset extends Component
             }
         );
 
-        session()->flash('status', trans($status));
-        to_route('home');
+        $status !== Password::PASSWORD_RESET ?
+            $this->error(trans($status)) :
+            $this->success(trans($status), redirectTo: route('login'));
     }
 
     #[Computed]
