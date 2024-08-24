@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\{Password};
 use Illuminate\Support\Str;
-use Livewire\Attributes\{Layout, Rule};
+use Livewire\Attributes\{Computed, Layout, Rule};
 use Livewire\Component;
 
 class Reset extends Component
@@ -57,6 +57,12 @@ class Reset extends Component
 
         session()->flash('status', trans($status));
         to_route('home');
+    }
+
+    #[Computed]
+    public function obfuscatedEmail(): string
+    {
+        return obfuscate_email($this->email);
     }
 
     private function tokenNotValid(): bool

@@ -66,3 +66,18 @@ test('validating form rules', function ($field, $value, $rule) {
     'password::confirmed' => ['field' => 'password', 'value' => 'password', 'rule' => 'confirmed'],
     'password::max'       => ['field' => 'password', 'value' => str_repeat('a', 256), 'rule' => 'max'],
 ]);
+
+test('needs to show an obfuscate email to the user', function () {
+    $email = 'email@email.com';
+    $user  = User::factory()->create(['email' => $email]);
+    $token = Password::createToken($user);
+
+    $obfuscatedEmail = obfuscate_email($email);
+    expect($obfuscatedEmail)
+        ->toBe('e****@email.com');
+
+    Livewire::test(Reset::class, [
+        'token' => $token,
+        'email' => $email,
+    ])->assertSet('obfuscatedEmail', $obfuscatedEmail);
+});
