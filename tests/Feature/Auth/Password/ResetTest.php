@@ -45,3 +45,24 @@ test('if is possible to reset the password with the given token', function () {
         Hash::check('new-password', $user->password)
     );
 });
+
+test('validating form rules', function ($field, $value, $rule) {
+    $user  = User::factory()->create();
+    $token = Password::createToken($user);
+
+    Livewire::test(Reset::class, [
+        'token' => $token,
+        'email' => $user->email,
+    ])
+        ->set($field, $value)
+        ->call('updatePassword')
+        ->assertHasErrors([$field => $rule]);
+})->with([
+    'token::required'     => ['field' => 'token', 'value' => '', 'rule' => 'required'],
+    'email::required'     => ['field' => 'email', 'value' => '', 'rule' => 'required'],
+    'email::confirmed'    => ['field' => 'email', 'value' => 'email@email.com', 'rule' => 'confirmed'],
+    'email::email'        => ['field' => 'email', 'value' => 'email', 'rule' => 'email'],
+    'password::required'  => ['field' => 'password', 'value' => '', 'rule' => 'required'],
+    'password::confirmed' => ['field' => 'password', 'value' => 'password', 'rule' => 'confirmed'],
+    'password::max'       => ['field' => 'password', 'value' => str_repeat('a', 256), 'rule' => 'max'],
+]);
