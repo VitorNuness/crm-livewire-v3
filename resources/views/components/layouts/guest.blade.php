@@ -10,6 +10,8 @@
 </head>
 <body class="font-sans antialiased bg-base-200/50 dark:bg-base-200">
     <main class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
+        <x-toast />
+
         {{ $slot }}
     </main>
 </body>
