@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -52,10 +53,11 @@ class User extends Authenticatable
 
     public function hasPermissionTo(string $key): bool
     {
-        $permissions = Cache::get($this->getPermissionsCacheKey(), $this->permissions());
+        /** @var Collection $permissions */
+        $permissions = Cache::get($this->getPermissionsCacheKey(), $this->permissions);
 
         return  $permissions
-            ->where(compact('key'))
+            ->where('key', '=', $key)
             ->isNotEmpty();
     }
 
