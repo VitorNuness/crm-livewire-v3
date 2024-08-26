@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasPermissions;
+use App\Traits\Models\HasPermissions;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;

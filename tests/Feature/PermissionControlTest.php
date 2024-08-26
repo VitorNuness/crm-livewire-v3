@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Enums\ECan;
+use App\Enums\ECan;
 use App\Models\{Permission, User};
 use Database\Seeders\{PermissionSeeder, UserSeeder};
 use Illuminate\Support\Facades\{Cache, DB};

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Enums\ECan;
+use App\Enums\ECan;
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
 
