@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Enums\ECan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +33,7 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function withPermission(string $key): static
+    public function withPermission(ECan $key): static
     {
         return $this->afterCreating(function (User $user) use ($key) {
             $user->givePermissionTo($key);

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Enums\ECan;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -10,7 +11,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::factory()
-            ->withPermission('be an admin')
+            ->withPermission(ECan::BE_AN_ADMIN)
             ->create([
                 'name'  => 'CRM Admin',
                 'email' => 'admin@crm.com',
