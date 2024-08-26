@@ -2,6 +2,7 @@
 
 use App\Models\{Permission, User};
 use Database\Seeders\{PermissionSeeder, UserSeeder};
+use Illuminate\Support\Facades\{Cache, DB};
 
 use function Pest\Laravel\{actingAs, assertDatabaseHas, seed};
 
@@ -50,4 +51,29 @@ it('should block the access to admin pages of the user not have the permission t
     actingAs($user)
         ->get(route('admin.dashboard'))
         ->assertForbidden();
+});
+
+test('make sure that we are using cache to store user permissions', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo('be an admin');
+
+    $cacheKey = 'user::' . $user->id . '::permissions';
+
+    expect(Cache::has($cacheKey))
+        ->toBeTrue()
+        ->and(Cache::get($cacheKey))
+        ->toBe($user->permissions);
+});
+
+test('make sure that we are using the cache to retrieve/check when the user has the given permissions', function () {
+    $user = User::factory()->create();
+    $user->givePermissionTo('be an admin');
+
+    $hit = false;
+    DB::listen(function ($query) use (&$hit) {
+        $hit = true;
+    });
+    $user->hasPermissionTo('be an admin');
+
+    expect($hit)->toBeFalse();
 });

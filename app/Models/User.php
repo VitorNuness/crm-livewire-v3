@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable
 {
@@ -43,10 +44,23 @@ class User extends Authenticatable
     public function givePermissionTo(string $key): void
     {
         $this->permissions()->firstOrCreate(compact('key'));
+
+        $cacheKey = $this->getPermissionsCacheKey();
+        Cache::forget($cacheKey);
+        Cache::rememberForever($cacheKey, fn () => $this->permissions);
     }
 
     public function hasPermissionTo(string $key): bool
     {
-        return  $this->permissions()->where(compact('key'))->exists();
+        $permissions = Cache::get($this->getPermissionsCacheKey(), $this->permissions());
+
+        return  $permissions
+            ->where(compact('key'))
+            ->isNotEmpty();
+    }
+
+    private function getPermissionsCacheKey(): string
+    {
+        return 'user::' . $this->id . '::permissions';
     }
 }
