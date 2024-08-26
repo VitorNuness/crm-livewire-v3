@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\{Permission, User};
-use Database\Seeders\PermissionSeeder;
+use Database\Seeders\{PermissionSeeder, UserSeeder};
 
-use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\{assertDatabaseHas, seed};
 
 it('should be able to given an user a permission to do something', function () {
     $user = User::factory()->create();
@@ -25,9 +25,21 @@ it('should be able to given an user a permission to do something', function () {
 });
 
 test('permission has to have a seeder', function () {
-    $this->seed(PermissionSeeder::class);
+    seed(PermissionSeeder::class);
 
     assertDatabaseHas('permissions', [
         'key' => 'be an admin',
+    ]);
+});
+
+test('seed with an admin user', function () {
+    seed([
+        PermissionSeeder::class,
+        UserSeeder::class,
+    ]);
+
+    assertDatabaseHas('permission_user', [
+        'user_id'       => User::query()->first()?->id,
+        'permission_id' => Permission::query()->where(['key' => 'be an admin'])->first()?->id,
     ]);
 });
