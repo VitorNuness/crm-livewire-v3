@@ -1,7 +1,8 @@
 <?php
 
+use App\Enums\ECan;
 use App\Livewire\Auth\{Login, Password, Register};
-use App\Livewire\Welcome;
+use App\Livewire\{Admin, Welcome};
 use Illuminate\Support\Facades\{Auth, Route};
 
 Route::get('/auth/login', Login::class)->name('login');
@@ -12,4 +13,12 @@ Route::get('/password/reset', Password\Reset::class)->name('password.reset');
 
 Route::middleware('auth')->group(function () {
     Route::get('/', Welcome::class)->name('home');
+
+    //region Admin
+    Route::prefix('/admin')
+        ->middleware('can:' . ECan::BE_AN_ADMIN->value)
+        ->group(function () {
+            Route::get('/dashboard', Admin\Dashboard::class)->name('admin.dashboard');
+        });
+    //endregion
 });
