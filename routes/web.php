@@ -2,7 +2,7 @@
 
 use App\Enums\ECan;
 use App\Livewire\Auth\{Login, Password, Register};
-use App\Livewire\Welcome;
+use App\Livewire\{Admin, Welcome};
 use Illuminate\Support\Facades\{Auth, Route};
 
 Route::get('/auth/login', Login::class)->name('login');
@@ -18,7 +18,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('/admin')
         ->middleware('can:' . ECan::BE_AN_ADMIN->value)
         ->group(function () {
-            Route::get('/dashboard', fn () => 'admin dashboard')->name('admin.dashboard');
+            Route::get('/dashboard', Admin\Dashboard::class)->name('admin.dashboard');
         });
     //endregion
 });
