@@ -47,10 +47,10 @@ test('check the table format', function () {
     actingAs(User::factory()->admin()->create());
     Livewire::test(Index::class)
         ->assertSet('headers', [
-            ['key' => 'id', 'label' => '#'],
-            ['key' => 'name', 'label' => 'Name'],
-            ['key' => 'email', 'label' => 'Email'],
-            ['key' => 'permissions', 'label' => 'Permissions'],
+            ['key' => 'id', 'label' => '#', 'sortByColumn' => 'id', 'sortDirection' => 'asc'],
+            ['key' => 'name', 'label' => 'Name', 'sortByColumn' => 'id', 'sortDirection' => 'asc'],
+            ['key' => 'email', 'label' => 'Email', 'sortByColumn' => 'id', 'sortDirection' => 'asc'],
+            ['key' => 'permissions', 'label' => 'Permissions', 'sortByColumn' => 'id', 'sortDirection' => 'asc'],
         ]);
 });
 
