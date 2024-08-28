@@ -84,3 +84,18 @@ it('should be able to filter by permission key', function () {
         $livewire->assertDontSee($user->name);
     }
 });
+
+it('should be able to list deleted users', function () {
+    $admin        = User::factory()->admin()->create(['name' => 'Admin', 'email' => 'admin@email.com']);
+    $deletedUsers = User::factory(10)->create(['deleted_at' => now()]);
+
+    actingAs($admin);
+    $livewire = Livewire::test(Index::class)
+        ->set('search_trash', true);
+
+    $livewire->assertDontSee($admin->name);
+
+    foreach ($deletedUsers as $user) {
+        $livewire->assertSee($user->name);
+    }
+});

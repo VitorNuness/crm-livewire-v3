@@ -17,6 +17,9 @@ class Index extends Component
     #[Rule('exists:permissions,id')]
     public array $search_permissions = [];
 
+    #[Rule('bool')]
+    public bool $search_trash = false;
+
     public Collection $permissionsSearchable;
 
     public function mount(): void
@@ -63,6 +66,10 @@ class Index extends Component
                     'permissions',
                     fn (Builder $q) => $q->whereIn('id', $this->search_permissions)
                 )
+            )
+            ->when(
+                $this->search_trash,
+                fn (Builder $q) => $q->onlyTrashed()
             )
             ->paginate();
     }
