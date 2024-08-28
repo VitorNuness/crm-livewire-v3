@@ -24,6 +24,38 @@
     </div>
 
     <x-table :headers="$this->headers" :rows="$this->users">
+        {{-- TABLE HEADER --}}
+        @scope('header_id', $header)
+            {{-- <x-table.th :$header name="id" /> --}}
+            <div wire:click="sortBy('id', '{{ $header['sortDirection'] == 'asc' ? 'desc' : 'asc' }}')" class="cursor-pointer">
+                {{ $header['label'] }}
+                @if ($header['sortByColumn'] == 'id')
+                    <x-icon :name="$header['sortDirection'] == 'asc' ? 'o-chevron-down': 'o-chevron-up'" />
+                @endif
+            </div>
+        @endscope
+
+        @scope('header_name', $header)
+            {{-- <x-table.th :$header name="name" /> --}}
+            <div wire:click="sortBy('name', '{{ $header['sortDirection'] == 'asc' ? 'desc' : 'asc' }}')" class="cursor-pointer">
+                {{ $header['label'] }}
+                @if ($header['sortByColumn'] == 'name')
+                    <x-icon :name="$header['sortDirection'] == 'asc' ? 'o-chevron-down': 'o-chevron-up'" />
+                @endif
+            </div>
+        @endscope
+
+        @scope('header_email', $header)
+            {{-- <x-table.th :$header name="email" /> --}}
+            <div wire:click="sortBy('email', '{{ $header['sortDirection'] == 'asc' ? 'desc' : 'asc' }}')" class="cursor-pointer">
+                {{ $header['label'] }}
+                @if ($header['sortByColumn'] == 'email')
+                    <x-icon :name="$header['sortDirection'] == 'asc' ? 'o-chevron-down': 'o-chevron-up'" />
+                @endif
+            </div>
+        @endscope
+
+        {{-- TABLE BODY --}}
         @scope('cell_permissions', $user)
             @foreach ($user->permissions as $permission)
                 <x-badge :value="$permission->key" class="badge-primary" />

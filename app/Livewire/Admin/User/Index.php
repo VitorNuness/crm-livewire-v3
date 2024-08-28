@@ -83,10 +83,16 @@ class Index extends Component
     public function headers(): array
     {
         return [
-            ['key' => 'id', 'label' => '#'],
-            ['key' => 'name', 'label' => 'Name'],
-            ['key' => 'email', 'label' => 'Email'],
-            ['key' => 'permissions', 'label' => 'Permissions'],
+            ['key' => 'id', 'label' => '#', 'sortByColumn' => $this->sortByColumn, 'sortDirection' => $this->sortDirection],
+            ['key' => 'name', 'label' => 'Name', 'sortByColumn' => $this->sortByColumn, 'sortDirection' => $this->sortDirection],
+            ['key' => 'email', 'label' => 'Email', 'sortByColumn' => $this->sortByColumn, 'sortDirection' => $this->sortDirection],
+            ['key' => 'permissions', 'label' => 'Permissions', 'sortByColumn' => $this->sortByColumn, 'sortDirection' => $this->sortDirection],
         ];
+    }
+
+    public function sortBy(string $column, string $direction): void
+    {
+        $this->sortByColumn  = $column;
+        $this->sortDirection = $direction;
     }
 }
