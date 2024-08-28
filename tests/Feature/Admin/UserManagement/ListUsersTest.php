@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Admin\User\Index;
-use App\Models\User;
+use App\Models\{Permission, User};
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Livewire;
 
@@ -61,6 +61,22 @@ it('should be able to filter by name and email', function () {
     actingAs($admin);
     $livewire = Livewire::test(Index::class)
         ->set('search', 'adm');
+
+    $livewire->assertSee($admin->name);
+
+    foreach ($users as $user) {
+        $livewire->assertDontSee($user->name);
+    }
+});
+
+it('should be able to filter by permission key', function () {
+    $users      = User::factory(10)->create(['name' => 'Zzz']);
+    $admin      = User::factory()->admin()->create(['name' => 'Admin', 'email' => 'admin@email.com']);
+    $permission = Permission::query()->first();
+
+    actingAs($admin);
+    $livewire = Livewire::test(Index::class)
+        ->set('search_permissions', [$permission->id]);
 
     $livewire->assertSee($admin->name);
 

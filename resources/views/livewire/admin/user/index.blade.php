@@ -2,7 +2,19 @@
     <x-header title="Users" separator />
 
     <div class="flex my-4 justify-between">
-        <x-input placeholder="Search by name or email..." wire:model.live.debounce="search" clearable icon="o-magnifying-glass" class="!px-10"/>
+        <div class="flex flex-row space-x-4">
+            <x-input label="Search by name or email" wire:model.live.debounce="search" clearable icon="o-magnifying-glass" class="!px-10"/>
+
+            <x-choices
+                class="!h-3"
+                label="Search by permissions"
+                wire:model.live.debounce="search_permissions"
+                :options="$permissionsSearchable"
+                option-label="key"
+                clearable
+            />
+        </div>
+
         <x-button class="btn-primary" label="Create" responsive icon="o-plus" />
     </div>
 
