@@ -39,4 +39,9 @@ class UserFactory extends Factory
             $user->givePermissionTo($key);
         });
     }
+
+    public function admin(): static
+    {
+        return $this->withPermission(ECan::BE_AN_ADMIN);
+    }
 }
