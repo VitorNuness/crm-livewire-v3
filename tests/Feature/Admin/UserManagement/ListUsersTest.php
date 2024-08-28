@@ -53,3 +53,18 @@ test('check the table format', function () {
             ['key' => 'permissions', 'label' => 'Permissions'],
         ]);
 });
+
+it('should be able to filter by name and email', function () {
+    $users = User::factory(10)->create(['name' => 'Zzz']);
+    $admin = User::factory()->admin()->create(['name' => 'Admin', 'email' => 'admin@email.com']);
+
+    actingAs($admin);
+    $livewire = Livewire::test(Index::class)
+        ->set('search', 'adm');
+
+    $livewire->assertSee($admin->name);
+
+    foreach ($users as $user) {
+        $livewire->assertDontSee($user->name);
+    }
+});
