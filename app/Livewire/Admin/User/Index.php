@@ -20,6 +20,10 @@ class Index extends Component
     #[Rule('bool')]
     public bool $search_trash = false;
 
+    public string $sortDirection = 'asc';
+
+    public string $sortByColumn = 'id';
+
     public Collection $permissionsSearchable;
 
     public function mount(): void
@@ -71,6 +75,7 @@ class Index extends Component
                 $this->search_trash,
                 fn (Builder $q) => $q->onlyTrashed()
             )
+            ->orderBy($this->sortByColumn, $this->sortDirection)
             ->paginate();
     }
 

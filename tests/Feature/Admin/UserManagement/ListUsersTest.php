@@ -99,3 +99,33 @@ it('should be able to list deleted users', function () {
         $livewire->assertSee($user->name);
     }
 });
+
+it('should be able to sort by name', function () {
+    User::factory(10)->create();
+    $admin         = User::factory()->admin()->create(['name' => 'Admin', 'email' => 'admin@email.com']);
+    $firstUserAsc  = User::query()->orderBy('name')->first()->name;
+    $firstUserDesc = User::query()->orderBy('name', 'desc')->first()->name;
+
+    actingAs($admin);
+    $livewire = Livewire::test(Index::class);
+
+    $livewire
+        ->set('sortDirection', 'asc')
+        ->set('sortByColumn', 'name')
+        ->assertSet(
+            'users',
+            fn ($users) => expect($users->first()->name)->toBe($firstUserAsc)
+                ->and($users->last()->name)->toBe($firstUserDesc)
+                && true
+        );
+
+    $livewire
+        ->set('sortDirection', 'desc')
+        ->set('sortByColumn', 'name')
+        ->assertSet(
+            'users',
+            fn ($users) => expect($users->first()->name)->toBe($firstUserDesc)
+                ->and($users->last()->name)->toBe($firstUserAsc)
+                && true
+        );
+});
