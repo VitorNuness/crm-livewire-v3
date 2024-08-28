@@ -28,12 +28,12 @@ test('make sure the route only access by admin users', function () {
 test('can list all users', function () {
     $users = User::factory(10)->create();
 
+    actingAs(User::factory()->admin()->create());
     $livewire = Livewire::test(Index::class);
-
     $livewire->assertSet('users', function ($users) {
         expect($users)
             ->toBeInstanceOf(LengthAwarePaginator::class)
-            ->toHaveCount(10);
+            ->toHaveCount(11);
 
         return true;
     });
@@ -41,4 +41,15 @@ test('can list all users', function () {
     foreach ($users as $user) {
         $livewire->assertSee($user->name);
     }
+});
+
+test('check the table format', function () {
+    actingAs(User::factory()->admin()->create());
+    Livewire::test(Index::class)
+        ->assertSet('headers', [
+            ['key' => 'id', 'label' => '#'],
+            ['key' => 'name', 'label' => 'Name'],
+            ['key' => 'email', 'label' => 'Email'],
+            ['key' => 'permissions', 'label' => 'Permissions'],
+        ]);
 });
